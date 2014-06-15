@@ -1,0 +1,132 @@
+
+#mainContainer{
+	color: white;
+	font-family: helvetica, sans-serif;
+}
+.edge{
+	position: relative;
+	margin: 0 auto;
+	height: 160px;
+	width: 1000px;
+	background-color: #5F9EA0;
+}
+#contactButton{
+	position: absolute;
+	display: inline-block;
+	margin: 15px 60px;
+	height: 125px;
+	width: 300px;
+	border: 1px solid white;
+	display: inline-block;
+	border-radius: 20px;
+	background-color: #6495ED;
+}
+
+#contactButton p{
+	margin: 15px;
+	line-height: 20px;
+}
+.contactInfo{
+	text-transform: uppercase;
+}
+#window{
+	margin:15px;
+	position: relative;
+	display: inline-block;
+	left:450px;
+	height:125px;
+	width: 150px;
+	overflow: hidden;
+	border: 1px solid white;
+}
+#slideReel{
+	height: 125px;
+	width: 600px;
+	display: inline-block;
+	position: relative;
+	right: 0px;
+	left: 0px;
+	transition: left 3s ease;
+}
+
+#slideReel img{
+	float:left;
+	height: 125px;
+	width: 150px;
+}
+
+#middle{
+	position: relative;
+	margin: 0 auto;
+	height: 600px;
+	width: 1000px;
+	background-image: url("../img/iceberg.jpeg");
+	background-size: cover;
+}
+
+.midDiv{
+	height: 525px;
+	margin-top:32px;
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+}
+.sideLeft{
+	float:left;
+	left: 50px;
+} 
+.sideRight{
+	float:right;
+	right: 50px;
+}
+#desc{
+	width: 450px;
+	background-color: white;
+	opacity: .5;	
+	border: 5px solid #5F9EA0;
+	color:black;
+	text-align: justify;
+	line-height: 30px;
+}
+#desc span{
+	font-weight: bold;
+}
+#desc p{
+	margin: 35px;
+}
+#meImage{
+	border: 5px solid #5F9EA0;
+}
+
+.corner{
+	display: inline-block;
+	height: 125px;
+	border: 1px solid white;
+	margin: 15px 50px;
+}
+
+#topRight{
+	float:right;
+}
+#topRight:hover{
+	box-shadow: -30px 10px 10px;
+}
+
+#bottomLeft{
+	float:left;
+}
+#bottomLeft:hover{
+	box-shadow: 30px 10px 10px;
+}
+
+figure img{
+	height: 80%;
+}
+figcaption{
+	text-align: center;
+	height: 15%;
+	padding: 1px;
+	font-size: 16px;
+	background-color: #6495ED;
+}
+

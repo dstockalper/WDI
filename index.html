@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Doug Stockalper</title>
+	<link rel="stylesheet" type="text/css" href="css/main_css.css">
+	<!--
+	Uncomment if external script not available.  
+
+	 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+	 </script>
+
+	<script>
+
+	$(document).ready(function(){
+
+	var position = 0;
+	var slideOffset = 0;
+		
+	setInterval(function(){
+		position +=1;
+		slideOffset+=-150;
+		if(position%4==0){
+			$("#slideReel").animate({left: 0});
+			slideOffset=0;
+			position=0;
+		}else{
+			$("#slideReel").animate({left: slideOffset});
+		}
+	}, 10000);
+
+	$("#desc").on("click", function(){
+		$(this).toggleClass("sideLeft");
+		$(this).toggleClass("sideRight");
+		$("#meImage").toggleClass("sideRight");
+		$("#meImage").toggleClass("sideLeft");
+	})
+
+	$("#meImage").on("click", function(){
+		$(this).toggleClass("sideLeft");
+		$(this).toggleClass("sideRight");
+		$("#desc").toggleClass("sideRight");
+		$("#desc").toggleClass("sideLeft");
+	})
+	
+});
+
+	</script>
+-->
+	<script type="text/javascript" src="js/jQuery.js"></script>
+	<script type="text/javascript" src="js/main_js.js"></script>
+</head>
+
+<body>
+<div id="mainContainer">
+	<div class="edge">
+		<div id="contactButton">
+			<p><span class="contactInfo">name: </span> Doug Stockalper</p>
+			<p><span class="contactInfo">email:  </span> dstockalper@gmail.com</p>
+			<p><span class="contactInfo">phone:  </span> (760) 505-2465</p>
+		</div>
+		<div id="window">
+			<div id="slideReel">
+				<img src="img/cliff.jpeg">
+				<img src="img/glacier.jpeg">
+				<img src="img/turfhouse.jpeg">
+				<img src="img/waterfall.jpeg">
+			</div>
+		</div>
+		
+		<figure id="topRight" class = "corner">
+			<img src="img/geyser.jpeg">
+			<figcaption>Geysir</figcaption>
+		</figure>
+		
+	</div>
+
+	<div id="middle">
+		<div id="desc" class="midDiv sideLeft">
+			<p><span>About Me:</span><br><br>
+			Hi!  My name is Doug and I'm learning a bit of HTML/CSS/Javascript in GA's Front End Web Development course. This may not look like much, but I've improved a great deal in a matter of weeks. It can be frustrating, but also prety fun. </p>
+			<p>The images on this page are from my recent trip to Iceland.  If you want to see more of the floating glacier, go ahead and click on this texted section or on the picture next to it. The sections will swap positions, revealing more of the glacier background.</p>
+			 
+		</div>
+		<img src="img/snorkel.jpeg" id="meImage" class="midDiv sideRight">
+		
+	</div>
+
+	<div class="edge">
+		<figure id="bottomLeft" class = "corner">
+			<img src="img/crater.jpeg">
+			<figcaption>Crater</figcaption>
+		</figure>
+	</div>
+</div>
+</body>
+</html>
