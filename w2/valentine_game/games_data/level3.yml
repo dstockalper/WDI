@@ -1,0 +1,76 @@
+game_name: Level 3
+instructions: You are in a fantom city. Explore all the houses to find the recipe to kill the fantoms.
+first_room: Room 1
+final_room: Room 11
+---
+name: Room 1
+description: the hall
+ways:
+ right: Room 2
+ up: Room 4
+---
+name: Room 2
+description: the stairs
+ways:
+ left: Room 1
+ right: Room 3
+ up: Room 5
+---
+name: Room 3
+description: the living-room
+ways:
+ up: Room 6
+ left: Room 2
+---
+name: Room 4
+description: the dining-room
+ways:
+ up: Room 7
+ right: Room 5
+ down: Room 1
+---
+name: Room 5
+description: the kitchen
+ways:
+ up: Room 8
+ down: Room 2
+ left: Room 4
+ right: Room 6
+---
+name: Room 6
+description: Kate's room
+ways:
+ up: Room 9
+ down: Room 3
+ left: Room 5
+---
+name: Room 7
+description: Brian's room
+ways:
+ down: Room 4
+ right: Room 8
+---
+name: Room 8
+description: the bathroom
+ways:
+ down: Room 5
+ left: Room 7
+ right: Room 9
+---
+name: Room 9
+description: the parents room
+ways:
+ down: Room 6
+ left: Room 8
+ up: Room 10
+---
+name: Room 10
+description: the dressing room
+ways:
+ left: Room 11
+ down: Room 9
+---
+name: Room 11
+description: the secret room
+ways:
+ right: Room 10

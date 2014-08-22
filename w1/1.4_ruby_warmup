@@ -1,0 +1,22 @@
+def longest_word(sentence)
+	chars_not_wanted = [".", ",", ":", ";", "!", "?"]
+	for char in sentence
+		if char in chars_not_wanted
+			sentence.tr(char, "")
+		end
+	end
+	arr_words = sentence.split()   #Note: words in array will include periods, commas, etc.
+	max_length = 0
+	longest_word = nil
+	for word in arr_words
+		if (word.length > max_length)
+			max_length = word.length
+			longest_word = word
+		end
+	end
+	
+	return Kernel.puts("The longest word is '#{longest_word}', with a length of: #{max_length}.")
+end
+
+
+longest_word("This is a sentence and we are looking for the longest word.  Supercalifragislisticexpealidocious.")

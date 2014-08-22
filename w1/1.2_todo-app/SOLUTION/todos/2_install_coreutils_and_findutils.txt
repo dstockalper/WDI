@@ -1,0 +1,10 @@
+title: gotta install GNU tools
+status: done
+
+---
+
+brew install coreutils
+
+export PATH=/usr/local/opt/coreutils/libexec/gnubin/ls:$PATH
+
+brew install findutils --default-names

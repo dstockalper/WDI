@@ -1,0 +1,11 @@
+title: Make yaml files
+status: (Pending)
+priority: High
+
+---
+
+Convert input into hash
+
+Write hash to yaml file
+
+Read yaml files when list or show is called

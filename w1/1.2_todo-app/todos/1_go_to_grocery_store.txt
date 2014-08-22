@@ -1,0 +1,11 @@
+title:grocery
+status:done
+
+---
+
+buy milk
+buy eggs
+buy butter
+buy bread
+buy spinach
+buy steak
