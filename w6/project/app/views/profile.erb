@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>WDI Network - Profile</title>
+	<link rel="stylesheet" type="text/css" href="/public/semantic.css">
+</head>
+
+<body>
+	<h1>Welcome Back, current user</h1>
+	<h2>My, how you are popular. Look at your list of friends and their most recent posts:</h2>
+
+	<% users.each do |user| %>
+	<p><%= user.username %> is at <%= user.address %> in <%= user.city %>, <%= user.state %> <%= user.country %></p>
+	<% end %>
+
+	<form action="/post" method="POST">
+		<textarea rows="2" cols="40" name="content" placeholder="Comment here..."></textarea>
+		<input type="submit" value="Submit">
+	</form>
+
+</body>
+
+</html>
