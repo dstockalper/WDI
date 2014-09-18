@@ -120,7 +120,7 @@ class App
 						# Get SQL-created id of new user
 						id_of_current_user = @orm.get_user_id_from_username(request.POST['new_username'])
 						# Set cookie of user_id
-						request.session['user_id'] = new_user_obj.id
+						request.session['user_id'] = id_of_current_user
 
 						res.redirect('/profile')
 					end
@@ -164,13 +164,17 @@ class App
 				current_user_obj = @orm.get_user_object_from_id(id_of_current_user)
 				posts_of_current_user = @orm.get_all_posts_of_user(current_user_obj) # returns array of objects (post id, content, timestamp)
 
-				# Load current user's following (as User objects) from the database
+				# Load current user's following (as Following objects) from the database
 				following_of_current_user = @orm.get_all_following_of_user(current_user_obj)
+
+				# Get most recent post of each Following: top_post_arr is an array of Post objects...the element is 'nil' where the user has no Posts
+				top_post_arr = @orm.get_most_recent_post_of_each_following(following_of_current_user)
 
 				locals = {
 					:current_user => current_user_obj,
 					:own_posts => posts_of_current_user,
-					:following => following_of_current_user
+					:following => following_of_current_user,
+					:top_posts => top_post_arr
 				}
 
 				res.write render('profile', locals)	

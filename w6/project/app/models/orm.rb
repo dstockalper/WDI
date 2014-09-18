@@ -73,7 +73,7 @@ class ORM
 
 
 	def get_user_object_from_id(user_id)
-		results = @db.execute("SELECT * FROM users WHERE id = #{user_id} LIMIT 1;")[0]
+		results = @db.execute("SELECT * FROM users WHERE id = #{user_id};")[0]
 		obj = User.new(results)
 	end
 
@@ -92,6 +92,17 @@ class ORM
 			Following.new(User.new(row), own_obj)
 		end
 	end
+
+
+
+	def get_most_recent_post_of_each_following(arr_following)
+		most_recent_posts = arr_following.map do |following|
+			last = get_all_posts_of_user(following).last()
+		end
+		return most_recent_posts # array of Post objects
+	end
+
+
 
 	def add_to_following(id_of_user, id_of_following)
 		@db.execute <<-SQL, [id_of_user, id_of_following]

@@ -3,6 +3,7 @@ class Following
 	attr_accessor :username, :password, :address, :city, :state, :country, :lat, :lng, :hub_lat, :hub_lng, :distance
 
 	def initialize(user_obj, own_obj)
+		@id = user_obj.id
 		@username = user_obj.username
 		@password = user_obj.password
 		@address = user_obj.address
@@ -13,6 +14,6 @@ class Following
 		@lng = user_obj.lng
 		@hub_lat = own_obj.lat
 		@hub_lng = own_obj.lng
-		@distance = (((@hub_lat - @lat)**2 + (@hub_lng - @lng)**2)**(0.5)) * 100 * 1.1
+		@distance = ((((@hub_lat - @lat)**2 + (@hub_lng - @lng)**2)**(0.5)) * 100 * 1.1).round(2)
 	end
 end

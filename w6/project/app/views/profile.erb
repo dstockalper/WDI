@@ -29,7 +29,7 @@
 
 	<h2>Your Posts:</h2>
 	<% own_posts.reverse_each do |post| %>
-	<p><%= post.content %> - <%= post.timestamp %></p>
+		<p><%= post.content %> - <%= post.timestamp %></p>
 	<% end %>
 
 
@@ -40,8 +40,15 @@
 
 	<h2>You Are Following:</h2>
 	<% following.reverse_each do |user| %>
-	<p><b><%= user.username %></b> at <%= user.address%> in <%= user.city %>, <%= user.state %> (<%= user.country %>) - <i><%= user.distance %> kilometers from your location.</i></p>
+		<p><b><%= user.username %></b> at <%= user.address%> in <%= user.city %>, <%= user.state %> (<%= user.country %>) - <i><%= user.distance %> kilometers from your location.</i></p>
 	<% end %>
+
+	<% top_posts.reverse_each do |post| %>
+		<% if post != nil %>
+			<p><%= post.content %> - <%= post.timestamp %></p>
+		<% end %>
+	<% end %>
+
 
 
 </body>
