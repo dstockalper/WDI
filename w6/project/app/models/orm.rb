@@ -1,4 +1,4 @@
-require_relative 'sql_statements'
+require 'sql_statements'
 
 # ORM Class ************************************************************
 class ORM
@@ -32,13 +32,50 @@ class ORM
 				(username, password, address, city, state, country, lat, lng)
 			VALUES
 				(?, ?, ?, ?, ?, ?, ?, ?)
-	
+			;
 		SQL
 	end
 
+	def save_post(post_object, id_of_user)
+		@db.execute <<-SQL, [post_object.content]
+			INSERT INTO posts
+				(content)
+			VALUES
+				(?)
+			;
+		SQL
+
+		@db.execute <<-SQL, [id_of_user]
+			INSERT INTO user_posts
+				(user_id)
+			VALUES
+				(?)
+			;
+		SQL
+	end
+
+
+	def check_if_password_is_valid(name, attempted_password)
+		temp = @db.execute("SELECT password FROM users WHERE username = '#{name}';")
+		stored_password = temp[0]['password']
+		if attempted_password == stored_password
+			return true
+		else
+			return false
+		end
+	end
+
 	def get_user_id_from_username(name)
-		id_arr = @db.execute("SELECT id FROM users WHERE username = '#{name}';")
-		id = id_arr[0]['id']
+		temp = @db.execute("SELECT id FROM users WHERE username = '#{name}';")
+		id = temp[0]['id']
+	end
+
+	def get_all_posts_of_current_user(id)
+		results = @db.execute(SQL_GET_ALL_CURRENT_USER_POSTS, id)
+		results.map do |row|
+			Post.new(row)
+		end
+
 	end
 
 

@@ -50,7 +50,7 @@ def load_db_tables()
 		INSERT INTO posts
 			(content)
 		VALUES
-			("I am working aon a social networking app for the WDI course.")
+			("I am working on a social networking app for the WDI course.")
 		;
 
 		INSERT INTO user_posts
