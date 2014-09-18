@@ -7,17 +7,21 @@ require 'geocoder'
 require 'Typhoeus'
 require 'models/user'
 require 'models/post'
+require 'models/following'
 require 'models/orm'	
 
 API_KEY = "AIzaSyDCfAMEsaM4jLhjpgFLXb0eTF4dhcgdNy4"
 
 # Q's for Colt
+# css not linking...are folders structured properly for Rack::Static?
+# converting coordinates to miles/km?
 
 
+# .write vs. .redirect:
 # res.write only appends to the body
 # res.redirect affects the headers
 
-# 2 ways
+# 2 ways go get coordinates:
 
 # 2nd
 # rubygeocoder.com 
@@ -34,7 +38,6 @@ API_KEY = "AIzaSyDCfAMEsaM4jLhjpgFLXb0eTF4dhcgdNy4"
 
 
 
-
 # App ************************************************************
 class App
 
@@ -45,9 +48,6 @@ class App
 		@users = @orm.all(:users)
 		@posts = @orm.all(:posts)
 		@error_message = []
-		@id_of_current_user = nil
-		@posts_of_current_user = nil
-		@friends_of_current_user = nil
 	end
 	
 
@@ -62,17 +62,18 @@ class App
 		Rack::Response.new do |res|
 			case request.path_info
 
+			# LOGIN ===================================================================================================
 			when '/login', '/'
 				# Check to see if there is a cookie with user_id
 				if request.session['user_id']
 					# If cookie is present, redirect to /profile
-					@id_of_current_user = request.session['user_id']
 					res.redirect('/profile')
 				else
 					# If no cookie is present, render login
 					res.write render('login', {:errors => @error_message})
 				end
 
+			# REGISTER ===================================================================================================
 			when '/register'
 
 				# If user is trying to register as a new user
@@ -116,14 +117,16 @@ class App
 						# Save new user to databases
 						@orm.save_user(new_user_obj)
 
-						@id_of_current_user = @orm.get_user_id_from_username(request.POST['new_username'])
+						# Get SQL-created id of new user
+						id_of_current_user = @orm.get_user_id_from_username(request.POST['new_username'])
 						# Set cookie of user_id
-						request.session['user_id'] = @id_of_current_user
+						request.session['user_id'] = new_user_obj.id
 
 						res.redirect('/profile')
 					end
 				end
 
+			# CHECK LOGIN ===================================================================================================
 			when '/check_login'	# no cookie, but trying to login as EXISTING user
 				if request.POST['return_username']
 					attempted_return_username = request.POST['return_username']
@@ -143,24 +146,44 @@ class App
 							res.redirect('/login')
 						# If password is valid, set cookie and redirect to '/profile'
 						else
-							@id_of_current_user = @orm.get_user_id_from_username(request.POST['return_username'])
-							request.session['user_id'] = @id_of_current_user
+							id_of_current_user = @orm.get_user_id_from_username(request.POST['return_username'])
+							request.session['user_id'] = id_of_current_user
 							res.redirect('/profile')
 						end
 					end
 				end
 
+			# PROFILE ===================================================================================================
 			when '/profile'
-				# Load current user's posts form the database
-				@posts_of_current_user = @orm.get_all_posts_of_current_user(@id_of_current_user) # returns array of objects (post id, content, timestamp
-				
+				# If no cookie, send to index/login page
+				if !request.session['user_id']
+					res.redirect('/')
+				end
+				# Load current user's posts from the database
+				id_of_current_user = request.session['user_id']
+				current_user_obj = @orm.get_user_object_from_id(id_of_current_user)
+				posts_of_current_user = @orm.get_all_posts_of_user(current_user_obj) # returns array of objects (post id, content, timestamp)
+
+				# Load current user's following (as User objects) from the database
+				following_of_current_user = @orm.get_all_following_of_user(current_user_obj)
 
 				locals = {
-					:own_posts => @posts_of_current_user
+					:current_user => current_user_obj,
+					:own_posts => posts_of_current_user,
+					:following => following_of_current_user
 				}
 
 				res.write render('profile', locals)	
+
+			# POST ===================================================================================================
 			when '/post'
+				# If no cookie, send to index/login page
+				if !request.session['user_id']
+					res.redirect('/')
+				end
+
+				# Get user id from cookie
+				id_of_current_user = request.session['user_id']
 
 				# Create data structure of new post
 				new_post_hash = {
@@ -173,9 +196,38 @@ class App
 				# Add newly created post ojbect to list of post objects
 				@posts.push(new_post_obj)
 				# Save new post to databases
-				@orm.save_post(new_post_obj, @id_of_current_user)
+				@orm.save_post(new_post_obj, id_of_current_user)
 
 				res.redirect('/profile')
+
+			# SEARCH ===================================================================================================
+			when '/search'
+
+				locals = {
+					:all_users => @users
+				}
+				res.write render('search', locals)
+
+			# LOGOUT ===================================================================================================
+			when '/logout'
+				request.session['user_id'] = nil
+				@error_message = []
+				res.redirect('/')
+
+			# FOLLOW ===================================================================================================
+			when '/follow'
+				# If no cookie, send to index/login page
+				if !request.session['user_id']
+					res.redirect('/')
+				end
+
+				# Get user id from cookie
+				id_of_current_user = request.session['user_id']
+				# Get id of user to follow (from form submitted)
+				id_to_follow = request.POST['follow'].to_i
+				# Add this 'follow' to database
+				@orm.add_to_following(id_of_current_user, id_to_follow)
+				res.redirect('/search')
 
 			when '/semantic'
 				res.write render('semantic_ex')

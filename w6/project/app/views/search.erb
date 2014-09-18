@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>WDI Network - Search</title>
+	<link rel="stylesheet" type="text/css" href="/public/semantic.css">
+</head>
+
+<body>
+	
+	<form action='/profile' method="GET">
+		<input type="submit" value="Go To Profile Page">
+	</form>
+
+	<h1>Search for Users to Follow</h1>
+
+	<h2>Users:</h2>
+	<% all_users.each do |user| %>
+		<form action='/follow' method="POST">
+			<input type="hidden" name="follow" value="<%=user.id%>">
+			<input type="submit" value="Follow <%=user.username%>"> <p> in <%=user.city%>, <%=user.state%> <%=user.country%></p>
+		</form>
+	<% end %>
+
+</body>
+
+</html>

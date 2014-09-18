@@ -65,17 +65,42 @@ class ORM
 		end
 	end
 
+
 	def get_user_id_from_username(name)
 		temp = @db.execute("SELECT id FROM users WHERE username = '#{name}';")
 		id = temp[0]['id']
 	end
 
-	def get_all_posts_of_current_user(id)
-		results = @db.execute(SQL_GET_ALL_CURRENT_USER_POSTS, id)
+
+	def get_user_object_from_id(user_id)
+		results = @db.execute("SELECT * FROM users WHERE id = #{user_id} LIMIT 1;")[0]
+		obj = User.new(results)
+	end
+
+
+	def get_all_posts_of_user(obj)
+		results = @db.execute(SQL_GET_ALL_USER_POSTS, obj.id)
 		results.map do |row|
 			Post.new(row)
 		end
+	end
 
+
+	def get_all_following_of_user(own_obj)
+		results = @db.execute(SQL_GET_ALL_USER_FOLLOWING, own_obj.id)
+		results.map do |row|
+			Following.new(User.new(row), own_obj)
+		end
+	end
+
+	def add_to_following(id_of_user, id_of_following)
+		@db.execute <<-SQL, [id_of_user, id_of_following]
+			INSERT INTO following
+				(user_id, following_id)
+			VALUES
+				(?, ?)
+			;
+		SQL
 	end
 
 

@@ -31,11 +31,12 @@ def load_db_tables()
 			FOREIGN KEY (user_id) REFERENCES users(id)
 		);
 		
-		CREATE TABLE friends (
+		CREATE TABLE following (
+			id INTEGER PRIMARY KEY,
 			user_id INTEGER,
-			friend_name VARCHAR(255),
+			following_id INTEGER,
 			FOREIGN KEY (user_id) REFERENCES users(id),
-			FOREIGN KEY (friend_name) REFERENCES users(username)
+			FOREIGN KEY (following_id) REFERENCES users(id)
 		);
 	SQL
 
