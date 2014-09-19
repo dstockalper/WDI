@@ -12,13 +12,10 @@ require 'models/orm'
 
 API_KEY = "AIzaSyDCfAMEsaM4jLhjpgFLXb0eTF4dhcgdNy4"
 
-# Q's for Colt
-# css not linking...are folders structured properly for Rack::Static?
-# converting coordinates to miles/km?
-
+# Self notes;
 
 # .write vs. .redirect:
-# res.write only appends to the body
+# res.write affets the body
 # res.redirect affects the headers
 
 # 2 ways go get coordinates:
@@ -34,7 +31,6 @@ API_KEY = "AIzaSyDCfAMEsaM4jLhjpgFLXb0eTF4dhcgdNy4"
 # require 'typhoeus'
 # data = Typhoeus.get("url with string interpolation")
 # res = JSON.parse(data.body)    <--- returns geolocation
-
 
 
 
@@ -134,7 +130,7 @@ class App
 
 					# If user tries to login as existing user, but username doesn't exist
 					if !username_exists
-						@error_message = ["***#{attempted_return_username}*** does not exist. Please re-enter the spelling or register as a new user."]
+						@error_message = ["***#{attempted_return_username}*** is not a valid username. Please check the spelling or register as a new user."]
 						res.redirect('/login')
 					# If user uses an existing username
 					elsif username_exists
@@ -164,17 +160,22 @@ class App
 				current_user_obj = @orm.get_user_object_from_id(id_of_current_user)
 				posts_of_current_user = @orm.get_all_posts_of_user(current_user_obj) # returns array of objects (post id, content, timestamp)
 
-				# Load current user's following (as Following objects) from the database
+				# Load current user's following (as array of Following objects) from the database
 				following_of_current_user = @orm.get_all_following_of_user(current_user_obj)
 
 				# Get most recent post of each Following: top_post_arr is an array of Post objects...the element is 'nil' where the user has no Posts
 				top_post_arr = @orm.get_most_recent_post_of_each_following(following_of_current_user)
 
+				# Note on the two lines above: id of each top post should match id of following
+
+				map_url = get_map_url(current_user_obj, following_of_current_user)
+
 				locals = {
 					:current_user => current_user_obj,
 					:own_posts => posts_of_current_user,
 					:following => following_of_current_user,
-					:top_posts => top_post_arr
+					:top_posts => top_post_arr,
+					:map_url => map_url
 				}
 
 				res.write render('profile', locals)	
@@ -221,21 +222,40 @@ class App
 			# FOLLOW ===================================================================================================
 			when '/follow'
 				# If no cookie, send to index/login page
+
 				if !request.session['user_id']
 					res.redirect('/')
 				end
 
 				# Get user id from cookie
 				id_of_current_user = request.session['user_id']
+
+
 				# Get id of user to follow (from form submitted)
 				id_to_follow = request.POST['follow'].to_i
+
 				# Add this 'follow' to database
 				@orm.add_to_following(id_of_current_user, id_to_follow)
 				res.redirect('/search')
 
+			when '/change_location'
+				# If no cookie, send to index/login page
+				if !request.session['user_id']
+					res.redirect('/')
+				end
+				# Load current user's posts from the database
+				id_of_current_user = request.session['user_id']
+				
+				address = request.POST['address']
+				city = request.POST['city']
+				state = request.POST['state']
+				country = request.POST['country']
+
+				@orm.change_location(address, city, state, country)
+				
+				res.redirect('/profile')
 			when '/semantic'
 				res.write render('semantic_ex')
-
 			end
 		end
 	end
@@ -272,6 +292,96 @@ class App
 		lng = geo_data['results'][0]['geometry']['location']['lng']
 		return [lat, lng]
 	end
+
+	def get_max_distance(following_of_current_user)
+		max = 0
+		following_of_current_user.each do |obj|
+			if obj.distance > max
+				max = obj.distance
+			end
+		end
+		return max
+	end
+
+
+	def get_map_url(current_user_obj, following_of_current_user)
+
+				http = "http://maps.googleapis.com/maps/api/staticmap?"
+
+				my_address = current_user_obj.address.gsub(" ", "+").gsub("'", "%27")
+				my_city = current_user_obj.city.gsub(" ", "+")
+				my_state = current_user_obj.state.gsub(" ", "+")
+				my_country = current_user_obj.country.gsub(" ", "+")
+				my_lat = current_user_obj.lat
+				my_lng = current_user_obj.lng
+
+				center = "center=#{my_address},#{my_city},#{my_state}"
+
+				max_dist = get_max_distance(following_of_current_user)
+
+				if max_dist < 5
+					zfactor = 15
+				elsif max_dist < 10
+					zfactor = 12
+				elsif max_dist < 20
+					zfactor = 11
+				elsif max_dist < 30
+					zfactor = 10
+				elsif max_dist < 50
+					zfactor = 9
+				elsif max_dist < 75
+					zfactor = 8
+				elsif max_dist < 100
+					zfactor = 7
+				elsif max_dist < 400
+					zfactor = 6
+				elsif max_dist < 1000
+					zfactor = 5
+				elsif max_dist < 1500
+					zfactor = 4
+				elsif max_dist < 5000
+					zfactor = 3
+				elsif max_dist < 10000
+					zfactor = 2
+				else
+					zfactor = 1
+				end
+
+				zoom = "&zoom=#{zfactor}&size=600x400"
+				map = "&maptype=terrain"
+				self_color = "&markers=color:red"
+				self_label = "%7Clabel:U%7C"
+				self_coord = "#{my_lat},#{my_lng}"
+				fol_text = ""
+
+				following_of_current_user.each do |obj|
+					fol_color = "&markers=color:green"
+					fol_label = "%7Clabel:F%7C"
+					fol_coord = "#{obj.lat},#{obj.lng}" 
+
+					fol_text += fol_color + fol_label + fol_coord
+				end
+			
+				url = http + center + zoom + map + self_color + self_label + self_coord + fol_text
+	end
+
+
+				# Map url template ************************
+				# http://maps.googleapis.com/maps/api/staticmap?
+				# center=Brooklyn+Bridge,New+York,NY
+				# &zoom=13&size=600x300
+				# &maptype=roadmap
+				# &markers=color:blue
+				# %7Clabel:S%7C
+				# 40.702147,-74.015794
+
+				# &markers=color:green
+				# %7Clabel:G%7C
+				# 40.711614,-74.012318
+				# &markers=color:red
+				# %7Clabel:C%7C
+				# 40.718217,-73.998284
+				# Map url template ************************
 
 
 end

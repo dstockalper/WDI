@@ -20,15 +20,9 @@ def load_db_tables()
 
 		CREATE TABLE posts (
 			id INTEGER PRIMARY KEY,
+			user_id INTEGER,
 			content VARCHAR(255),
 			timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-		);
-
-		CREATE TABLE user_posts (
-			post_id INTEGER PRIMARY KEY,
-			user_id INTEGER,
-			FOREIGN KEY (post_id) REFERENCES posts(id),
-			FOREIGN KEY (user_id) REFERENCES users(id)
 		);
 		
 		CREATE TABLE following (
@@ -49,27 +43,15 @@ def load_db_tables()
 		;
 
 		INSERT INTO posts
-			(content)
+			(user_id, content)
 		VALUES
-			("I am working on a social networking app for the WDI course.")
-		;
-
-		INSERT INTO user_posts
-			(user_id)	
-		VALUES
-			(1)
+			(1, "I am working on a social networking app for the WDI course.")
 		;
 
 		INSERT INTO posts
-			(content)
+			(user_id, content)
 		VALUES
-			("My dog, Charley, has floppy ears.")
-		;
-
-		INSERT INTO user_posts
-			(user_id)
-		VALUES
-			(1)
+			(1, "My dog, Charley, has floppy ears.")
 		;
 
 	SQL

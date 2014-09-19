@@ -3,51 +3,137 @@
 <html>
 <head>
 	<title>WDI Network - Profile</title>
-	<link rel="stylesheet" type="text/css" href="/public/semantic.css">
+	<link rel="stylesheet" type="text/css" href="/public/css/semantic.css">
+	<link rel="stylesheet" type="text/css" href="/public/css/style.css">
 </head>
 
 <body>
-	<h1>Welcome Back, <%= current_user.username %>!</h1>
-	<p>Your current stated location is: <%= current_user.address %> in <%= current_user.city %>, <%= current_user.state %> (<%= current_user.country %>)</p>
 
-	<form action="/change_location" method="POST">
-		<input type="hidden" name="change_location" value="change_location">
-		<input type="submit" value="Change My Location/Address">
-	</form>
-
-	<form action="/logout" method="POST">
-		<input type="submit" value="Logout">
-	</form>
-
-	<br>
-	<h2>Write New Post:</h2>
-	<form action="/post" method="POST">
-		<textarea rows="2" cols="40" name="content" placeholder="Comment here..."></textarea>
-		<input type="submit" value="Submit">
-	</form>
-
-
-	<h2>Your Posts:</h2>
-	<% own_posts.reverse_each do |post| %>
-		<p><%= post.content %> - <%= post.timestamp %></p>
-	<% end %>
+	<div class="ui menu">
+    	<a class="active item">
+      		<i class="home icon"></i> Home
+    	</a>
+    	<a class="item">
+      		<i class="users icon"></i> Search for Users
+    	</a>
+    	<a class="item">
+      		<i class="plane icon"></i> Logout
+    	</a>
+    	<div class="right menu">
+	      	<div class="item">
+	        	<div class="ui icon input">
+	          		<input type="text" placeholder="Search...">
+	          		<i class="search link icon"></i>
+	        	</div>
+	      	</div>
+    	</div>
+  	</div>
 
 
-	<br><br>
-	<form action='/search' method="POST">
-		<input type="submit" value="Search for Users to Follow">
-	</form>
 
-	<h2>You Are Following:</h2>
-	<% following.reverse_each do |user| %>
-		<p><b><%= user.username %></b> at <%= user.address%> in <%= user.city %>, <%= user.state %> (<%= user.country %>) - <i><%= user.distance %> kilometers from your location.</i></p>
-	<% end %>
+	<div class="ui divided grid">
 
-	<% top_posts.reverse_each do |post| %>
-		<% if post != nil %>
-			<p><%= post.content %> - <%= post.timestamp %></p>
-		<% end %>
-	<% end %>
+
+		<div class="column eight wide" style="background-color: #ADD8E6;">
+			<h1>Welcome Back, <%= current_user.username %>!</h1>
+
+			<form action="/logout" method="POST">
+				<input type="submit" value="Logout">
+			</form>
+
+			<p>Your current stated location is: <span style="color:red; font-weight:bold;"><%= current_user.address %> in <%= current_user.city %>, <%= current_user.state %> (<%= current_user.country %>)</span></p>
+
+			<form action="/change_location" method="POST">
+				<input type="text" name="address" placeholder="Street Address / Location">
+				<input type="text" name="city" placeholder="City">
+				<input type="text" name="state" placeholder="State">
+				<input type="text" name="country" placeholder="Country"><br>
+				<input type="submit" value="Submit Change of Address / Location">
+			</form>
+
+			<br>
+			<h2>Write New Post:</h2>
+
+			<form action="/post" method="POST">
+				<textarea rows="4" cols="80" name="content" placeholder="Comment here..."></textarea><br>
+				<input type="submit" value="Submit">
+			</form>
+
+		</div>
+
+		<div class="column eight wide">
+			<h2><span style="color:red;">(U)</span>: Your location   <span style="color:green;">(F)</span>: People you are following.</h2>
+			<img src="<%= map_url %>">
+			<form action='/search' method="POST">
+				<input type="submit" value="Search for Additional Users to Follow">
+			</form>
+		</div>
+
+	</div>
+
+	<div class="ui divided grid">
+
+		<div class="column eight wide" style="background-color: #ADD8E6;">
+
+			<h2>Your Posts:</h2>
+			<% own_posts.reverse_each do |post| %>
+				<p><%= post.content %> - <%= post.timestamp %></p>
+			<% end %>
+
+		</div>
+
+		<div class="column eight wide">
+
+			<h2>You Are Following:</h2>
+
+			<div class="ui one column grid">
+				<div class="column">
+					<div class="ui piled blue segment">
+						<h2 class="ui header">
+							<i class="icon inverted cicrular blue comment"></i>Latest Comments
+						</h2>
+						<div class="ui comments">
+							<div class="comment">
+								<div class="content">
+
+									<% following.reverse_each do |user| %>
+										<a class="author"><span style="color:green; font-weight:bold;"><%= user.username %></span> at <%= user.address%> in <%= user.city %>, <%= user.state %> (<%= user.country %>)</a>
+										<a class="text"> ---> <%= user.distance %> km.</a>
+
+										
+										<% top_posts.reverse_each do |post| %>
+											<% if post && user %>
+												<% if post.id == user.id %>
+													
+													<div class="text"><%= post.content %><div class="metadata"><span class="time"><%= post.timestamp %></span></div></div>
+													
+													<br>
+												<% end %>
+											<% end %>
+										<% end %>
+									<% end %>
+
+							
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+
+	</div>
+
+
+
+	
+
+
+	
+
 
 
 

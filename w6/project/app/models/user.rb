@@ -1,7 +1,6 @@
 # User Class ************************************************************
 class User
-	attr_reader :id
-	attr_accessor :username, :password, :address, :city, :state, :country, :lat, :lng
+	attr_accessor :id, :username, :password, :address, :city, :state, :country, :lat, :lng
 
 	def initialize(user_data_hash)
 		@id = user_data_hash['id']

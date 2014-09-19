@@ -1,3 +1,5 @@
+# Following class is same as User class, but with distance from a particular OTHER user added
+
 class Following
 	attr_reader :id
 	attr_accessor :username, :password, :address, :city, :state, :country, :lat, :lng, :hub_lat, :hub_lng, :distance

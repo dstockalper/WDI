@@ -5,31 +5,72 @@
 
 <head>
 	<title>WDI Network - Login</title>
-	<link rel="stylesheet" type="text/css" href="public/semantic.css">
+	<link rel="stylesheet" type="text/css" href="public/css/semantic.css">
 </head>
 
 <body>
+
+
 	<% errors.each do |message| %>
-	<p style="color:red"><%= message %></p>
+		<p style="color:red"><%= message %></p>
 	<% end %>
 
-	<h2>Already a User? Login Here:</h2>
-	<form action="/check_login" method="POST">
-		<input type="text" name="return_username" placeholder="Username"><br>
-		<input type="text" name="return_password" placeholder="Password"><br>
-		<input type="submit" value="Submit">
+	<div class="ui attached message">
+  		<div class="header">Already have an account?</div>
+  		<p>Login Here:</p>
+	</div>
+
+	<form class="ui form attached fluid segment" action="/check_login" method="POST">
+		<div class="field">
+			<label>Username</label>
+			<input type="text" name="return_username" placeholder="Username">
+		</div>
+		<div class="field">
+			<label>Password</label>
+			<input type="password" name="return_password" placeholder="Password"><br>
+		</div>
+		<input class="ui blue submit button" type="submit" value="Submit">
 	</form>
 
-	<h2>First Time User? Register Here:</h2>
-	<form action="/register" method="POST">
-		<input type="text" name="new_username" placeholder="Username"><br>
-		<input type="text" name="new_password" placeholder="Password">
-		<input type="text" name="confirm_password" placeholder="Re-enter Password"><br>
-		<input type="text" name="address" placeholder="Street address / Location">
-		<input type="text" name="city" placeholder="City">
-		<input type="text" name="state" placeholder="State">
-		<input type="text" name="country" placeholder="Country"><br>
-		<input type="submit" value="Submit">
+	<div class="ui attached message">
+  		<div class="header">First time user?</div>
+  		<p>Register Here:</p>
+	</div>
+
+	<form class="ui form attached fluid segment" action="/register" method="POST">
+		<div class="field">
+			<label>Username</label>
+			<input type="text" name="new_username" placeholder="Username">
+		</div>
+		<div class="2 fields">
+			<div class = "field">
+				<label>Password</label>
+				<input type="password" name="new_password" placeholder="Password">
+			</div>
+			<div class = "field">
+				<label>Confirm Password</label>
+				<input type="password" name="confirm_password" placeholder="Re-enter Password">
+			</div>
+		</div>
+		<div class="field">
+			<label>Street Address / Location</label>
+			<input type="text" name="address" placeholder="Street address / Location">
+		</div>
+		<div class="3 fields">
+			<div class="field">
+				<label>City</label>
+				<input type="text" name="city" placeholder="City">
+			</div>
+			<div class="field">
+				<label>State</label>
+				<input type="text" name="state" placeholder="State">
+			</div>
+			<div class="field">
+				<label>Country</label>
+				<input type="text" name="country" placeholder="Country">
+			</div>
+		</div>
+		<input class="ui blue submit button"  type="submit" value="Submit">
 	</form>
 
 </body>

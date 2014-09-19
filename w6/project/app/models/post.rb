@@ -1,8 +1,8 @@
 
 # Post Class ************************************************************
 class Post
-	attr_reader :id
-	attr_accessor :content, :timestamp
+
+	attr_accessor :id, :content, :timestamp
 
 	def initialize(post_data_hash)
 		@id = post_data_hash['id']
