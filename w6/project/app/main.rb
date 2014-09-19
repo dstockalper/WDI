@@ -170,6 +170,7 @@ class App
 
 				map_url = get_map_url(current_user_obj, following_of_current_user)
 
+
 				locals = {
 					:current_user => current_user_obj,
 					:own_posts => posts_of_current_user,
@@ -251,7 +252,19 @@ class App
 				state = request.POST['state']
 				country = request.POST['country']
 
-				@orm.change_location(address, city, state, country)
+				# Use geocoding to get two element array with lattituted and longitude: [lat, lng]
+				geo_arr_lat_lng = get_geo_location(
+					address,
+					city,
+					state,
+					country
+				)
+				new_lat = geo_arr_lat_lng[0]
+				new_lng = geo_arr_lat_lng[1]
+
+				# Update the database with user's new address and geo coordinates
+				@orm.change_location(id_of_current_user, address, city, state, country, new_lat, new_lng)
+
 				
 				res.redirect('/profile')
 			when '/semantic'
@@ -347,7 +360,7 @@ class App
 					zfactor = 1
 				end
 
-				zoom = "&zoom=#{zfactor}&size=600x400"
+				zoom = "&zoom=#{zfactor}&size=700x400"
 				map = "&maptype=terrain"
 				self_color = "&markers=color:red"
 				self_label = "%7Clabel:U%7C"

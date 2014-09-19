@@ -16,6 +16,6 @@ class Following
 		@lng = user_obj.lng
 		@hub_lat = own_obj.lat
 		@hub_lng = own_obj.lng
-		@distance = ((((@hub_lat - @lat)**2 + (@hub_lng - @lng)**2)**(0.5)) * 100 * 1.1).round(2)
+		@distance = ((((@hub_lat - @lat)**2 + (@hub_lng - @lng)**2)**(0.5)) * 100).round(2)
 	end
 end

@@ -20,7 +20,8 @@
   		<p>Login Here:</p>
 	</div>
 
-	<form class="ui form attached fluid segment" action="/check_login" method="POST">
+
+	<form class="ui form attached fluid segment inverted form" action="/check_login" method="POST">
 		<div class="field">
 			<label>Username</label>
 			<input type="text" name="return_username" placeholder="Username">
@@ -31,13 +32,14 @@
 		</div>
 		<input class="ui blue submit button" type="submit" value="Submit">
 	</form>
+	<br><br>
 
 	<div class="ui attached message">
   		<div class="header">First time user?</div>
   		<p>Register Here:</p>
 	</div>
 
-	<form class="ui form attached fluid segment" action="/register" method="POST">
+	<form class="ui form attached fluid segment inverted" action="/register" method="POST">
 		<div class="field">
 			<label>Username</label>
 			<input type="text" name="new_username" placeholder="Username">
@@ -72,6 +74,7 @@
 		</div>
 		<input class="ui blue submit button"  type="submit" value="Submit">
 	</form>
+
 
 </body>
 

@@ -14,11 +14,18 @@
       		<i class="home icon"></i> Home
     	</a>
     	<a class="item">
-      		<i class="users icon"></i> Search for Users
+      		<i class="users icon"></i>
+      		<form action='/search' method="POST">
+				<input type="submit" value="Search for Additional Users to Follow">
+			</form>
     	</a>
     	<a class="item">
-      		<i class="plane icon"></i> Logout
+      		<i class="plane icon"></i> 
+      		<form action="/logout" method="POST">
+				<input type="submit" value="Logout">
+			</form>
     	</a>
+<!-- 
     	<div class="right menu">
 	      	<div class="item">
 	        	<div class="ui icon input">
@@ -26,7 +33,8 @@
 	          		<i class="search link icon"></i>
 	        	</div>
 	      	</div>
-    	</div>
+    	</div> -->
+
   	</div>
 
 
@@ -35,38 +43,47 @@
 
 
 		<div class="column eight wide" style="background-color: #ADD8E6;">
-			<h1>Welcome Back, <%= current_user.username %>!</h1>
+			<h1 style="margin-bottom:0px;">Welcome Back, <%= current_user.username %>!</h1>
+			<div style="margin-bottom:10px;">
+				<span style="color:red;"><%= current_user.address %> - <%= current_user.city %>, <%= current_user.state %> (<%= current_user.country %>)</span>
+			</div>
 
-			<form action="/logout" method="POST">
-				<input type="submit" value="Logout">
-			</form>
 
-			<p>Your current stated location is: <span style="color:red; font-weight:bold;"><%= current_user.address %> in <%= current_user.city %>, <%= current_user.state %> (<%= current_user.country %>)</span></p>
-
-			<form action="/change_location" method="POST">
-				<input type="text" name="address" placeholder="Street Address / Location">
-				<input type="text" name="city" placeholder="City">
-				<input type="text" name="state" placeholder="State">
-				<input type="text" name="country" placeholder="Country"><br>
-				<input type="submit" value="Submit Change of Address / Location">
+			<form class="ui form attached fluid segment" action="/change_location" method="POST">
+				<div class = "field">
+					<input type="text" name="address" placeholder="Street Address / Location">
+				</div>
+				<div class="3 fields">
+					<div class = "field">
+						<input type="text" name="city" placeholder="City">
+					</div>
+					<div class = "field">
+						<input type="text" name="state" placeholder="State">
+					</div>
+					<div class = "field">
+						<input type="text" name="country" placeholder="Country">
+					</div>
+				</div>
+				<input class="ui blue submit button"  type="submit" value="Submit Change in Location / Address">
 			</form>
 
 			<br>
-			<h2>Write New Post:</h2>
 
-			<form action="/post" method="POST">
-				<textarea rows="4" cols="80" name="content" placeholder="Comment here..."></textarea><br>
-				<input type="submit" value="Submit">
+			<form class="ui form" action="/post" method="POST">
+				<div class="field">
+					<textarea style="max-height:10px;" name="content" placeholder="Write new post here..."></textarea>
+				</div>
+				<input style="margin-bottom:30px;" class="ui blue submit button"  type="submit" value="Submit New Post">
 			</form>
 
 		</div>
 
+		<br><br>
+
 		<div class="column eight wide">
 			<h2><span style="color:red;">(U)</span>: Your location   <span style="color:green;">(F)</span>: People you are following.</h2>
 			<img src="<%= map_url %>">
-			<form action='/search' method="POST">
-				<input type="submit" value="Search for Additional Users to Follow">
-			</form>
+			
 		</div>
 
 	</div>
@@ -74,23 +91,38 @@
 	<div class="ui divided grid">
 
 		<div class="column eight wide" style="background-color: #ADD8E6;">
+			<div class="ui piled feed segment">
+				<h2 class="ui header">Your Posts</h2>
+				<div class="event">
+					<div class="label">
+						<i class="circular pencil icon"></i>
+					</div>
+					<div class="content">
+						<% own_posts.reverse_each do |post| %>
 
-			<h2>Your Posts:</h2>
-			<% own_posts.reverse_each do |post| %>
-				<p><%= post.content %> - <%= post.timestamp %></p>
-			<% end %>
+							<div class="date"><%= post.timestamp %></div>
+							<div class="summary">Post submitted</div>
+							<div class="extra text"><%= post.content %></div>
+							<br>
+						<% end %>
+
+
+					</div>
+				</div>
+			</div>
+
+
+			
 
 		</div>
 
 		<div class="column eight wide">
 
-			<h2>You Are Following:</h2>
-
 			<div class="ui one column grid">
 				<div class="column">
 					<div class="ui piled blue segment">
 						<h2 class="ui header">
-							<i class="icon inverted cicrular blue comment"></i>Latest Comments
+							<i class="icon inverted cicrular blue comment"></i>Latest posts of people you follow:
 						</h2>
 						<div class="ui comments">
 							<div class="comment">

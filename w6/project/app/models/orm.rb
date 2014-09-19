@@ -123,8 +123,13 @@ class ORM
 	end
 
 
-	def change_location(address, city, state, country)
-		
+	def change_location(my_id, addr, city, stat, coun, new_lat, new_lng)
+		@db.execute <<-SQL, [addr, city, stat, coun, new_lat, new_lng, my_id]
+			UPDATE users
+			SET address = ?, city = ?, state = ?, country = ?, lat = ?, lng = ?
+			WHERE id = ?
+			;
+		SQL
 	end
 
 
