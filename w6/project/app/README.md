@@ -21,7 +21,7 @@
 * /login
 ** New users prompted to register, checking for pre-existing username and matching password fields
 ** User receives cookie and will be auto-logged on future visits and redirected to profile page
-** Existing users who explicitly logged out or manually removed their cookie will be directed to the login page, where login checks for existing username and matching password
+** Existing users who explicitly logged out or manually removed their cookie will be directed to the login page, where login checks user-input for existing username and matching password
 * /profile
 ** profile page contains four quadrants: 
 *** Top left: Name, location, location-update form, blog-post form
